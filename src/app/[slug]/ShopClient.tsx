@@ -177,21 +177,21 @@ export function ShopClient({
                     {!p.in_stock && (
                       <span className="absolute left-2.5 top-2.5 rounded-full bg-ink/85 px-2.5 py-1 text-[11px] font-semibold text-white">Épuisé</span>
                     )}
-                    {p.in_stock && (
-                      <div className="absolute bottom-2.5 right-2.5">
-                        {qty === 0 ? (
-                          <button type="button" onClick={() => setQty(p.id, 1)} className="grid size-10 place-items-center rounded-full bg-white text-ink shadow-lg shadow-ink/10 ring-1 ring-line transition hover:scale-105 active:scale-95" aria-label={`Ajouter ${p.name}`}>
-                            <PlusIcon className="size-5" />
-                          </button>
-                        ) : (
-                          <Stepper qty={qty} onChange={(n) => setQty(p.id, n)} floating />
-                        )}
-                      </div>
-                    )}
                   </div>
                   <div className="mt-2.5 px-0.5">
                     <p className="line-clamp-2 text-sm font-medium leading-snug">{p.name}</p>
                     <p className="mt-1 text-[15px] font-bold">{formatFCFA(p.price)}</p>
+                  </div>
+                  <div className="mt-2.5">
+                    {!p.in_stock ? (
+                      <span className="flex h-10 items-center justify-center rounded-full border border-line text-sm text-mute">Indisponible</span>
+                    ) : qty === 0 ? (
+                      <button type="button" onClick={() => setQty(p.id, 1)} className="flex h-10 w-full items-center justify-center gap-1.5 rounded-full text-sm font-semibold text-white transition hover:opacity-90 active:scale-[0.98]" style={{ background: accent }}>
+                        <PlusIcon className="size-4" /> Ajouter<span className="hidden sm:inline"> au panier</span>
+                      </button>
+                    ) : (
+                      <Stepper qty={qty} onChange={(n) => setQty(p.id, n)} wide />
+                    )}
                   </div>
                 </li>
               );
@@ -208,7 +208,7 @@ export function ShopClient({
         <div className="fixed inset-x-0 bottom-0 z-20 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <button type="button" onClick={() => setOpen(true)} className="animate-rise mx-auto flex w-full max-w-md items-center gap-3 rounded-full bg-ink py-2 pl-2 pr-5 text-white shadow-2xl shadow-ink/30">
             <span className="grid size-10 place-items-center rounded-full text-sm font-bold" style={{ background: accent }}>{count}</span>
-            <span className="flex-1 text-left text-sm font-semibold">Voir mon panier</span>
+            <span className="flex-1 text-left text-sm font-semibold">Commander sur WhatsApp</span>
             <span className="text-sm font-bold">{formatFCFA(subtotal)}</span>
           </button>
         </div>
@@ -411,9 +411,9 @@ function Checkout({
   );
 }
 
-function Stepper({ qty, onChange, floating }: { qty: number; onChange: (n: number) => void; floating?: boolean }) {
+function Stepper({ qty, onChange, wide }: { qty: number; onChange: (n: number) => void; wide?: boolean }) {
   return (
-    <div className={`flex h-10 items-center rounded-full ${floating ? "bg-ink text-white shadow-lg shadow-ink/20" : "border border-line bg-white"}`}>
+    <div className={`flex h-10 items-center rounded-full ${wide ? "justify-between bg-ink text-white" : "border border-line bg-white"}`}>
       <button type="button" onClick={() => onChange(qty - 1)} className="grid size-10 place-items-center" aria-label="Retirer un">
         <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden><path d="M5 10h10" /></svg>
       </button>
