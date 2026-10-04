@@ -6,7 +6,7 @@ import { SUPPORT_WHATSAPP } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Boutique exemple" };
 
-const shop: Shop = { id: "s", owner_id: "o", slug: "awa-couture", name: "Awa Couture", whatsapp: SUPPORT_WHATSAPP, description: "Robes en wax, sacs et accessoires faits à Abidjan. Livraison rapide dans tout Abidjan.", logo_url: null, banner_url: null, color: "#e8690b", hours: "Lun - Sam, 9h - 19h", accepts_cash: true, accepts_wave: true, accepts_orange_money: true, trial_ends_at: "", paid_until: null, created_at: "" };
+const shop: Shop = { id: "s", owner_id: "o", slug: "awa-couture", name: "Awa Couture", whatsapp: SUPPORT_WHATSAPP || "2250768498648", description: "Robes en wax, sacs et accessoires faits à Abidjan. Livraison rapide dans tout Abidjan.", logo_url: null, banner_url: null, color: "#e8690b", hours: "Lun - Sam, 9h - 19h", accepts_cash: true, accepts_wave: true, accepts_orange_money: true, trial_ends_at: "", paid_until: null, created_at: "" };
 const cats = ["c1", "c2", "c3", "c2", "c2", "c1", "c2", "c1"];
 const products: Product[] = DEMO_PRODUCTS.map((d, i) => ({ id: "p" + i, shop_id: "s", category_id: cats[i], name: d.name, description: "Belle qualité.", price: d.price, image_url: unsplash(d.photo), in_stock: i !== 3, position: i, created_at: "" }));
 
