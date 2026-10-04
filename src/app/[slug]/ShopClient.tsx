@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Category, DeliveryZone, Product, Shop } from "@/lib/types";
 import { SITE_URL, formatFCFA, waLink } from "@/lib/utils";
-import { ProductArt } from "@/components/ProductArt";
 
 type Cart = Record<string, number>;
 
@@ -21,11 +21,13 @@ export function ShopClient({
   products,
   categories,
   zones,
+  demo,
 }: {
   shop: Shop;
   products: Product[];
   categories: Category[];
   zones: DeliveryZone[];
+  demo?: boolean;
 }) {
   const cartKey = `mondjassa-panier-${shop.id}`;
   const [cart, setCart] = useState<Cart>({});
@@ -39,13 +41,14 @@ export function ShopClient({
   useEffect(() => {
     setCart(readCart(cartKey));
     setLoaded(true);
+    if (demo) return;
     try {
       const seen = `mondjassa-vu-${shop.id}`;
       if (sessionStorage.getItem(seen)) return;
       sessionStorage.setItem(seen, "1");
     } catch {}
     createClient().rpc("log_shop_event", { p_shop_id: shop.id, p_type: "visit" }).then(() => {});
-  }, [cartKey, shop.id]);
+  }, [cartKey, shop.id, demo]);
 
   useEffect(() => {
     if (!loaded) return;
@@ -80,6 +83,11 @@ export function ShopClient({
 
   return (
     <div style={{ "--accent": accent } as React.CSSProperties} className="min-h-dvh bg-paper pb-28">
+      {demo && (
+        <Link href="/inscription" className="block bg-ink px-4 py-2.5 text-center text-xs text-white/80">
+          Ceci est une boutique exemple. <span className="font-semibold text-white underline underline-offset-2">Crée la tienne gratuitement</span>
+        </Link>
+      )}
       {/* Barre du haut, toujours visible */}
       <div className="sticky top-0 z-20 border-b border-line bg-white/85 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
@@ -231,27 +239,19 @@ export function ShopClient({
   );
 }
 
-// Image du produit, ou un visuel dessiné quand la vendeuse n'a pas mis de photo
-const SHAPE_WORDS: [RegExp, string][] = [
-  [/robe|jupe|ensemble|tenue|boubou|chemise|haut|top/i, "robe"],
-  [/sac|pochette|panier/i, "sac"],
-  [/basket|chaussure|sandale|talon|mule|claquette/i, "basket"],
-  [/boucle|collier|bracelet|bijou|bague/i, "boucles"],
-  [/parfum|huile|lait|crème|creme|savon|beurre/i, "parfum"],
-  [/rouge|gloss|maquillage|vernis|mascara/i, "rouge"],
-  [/montre/i, "montre"],
-  [/pagne|wax|tissu|foulard|bazin/i, "pagne"],
-];
-
-function ProductImage({ product, index, className = "", contain }: { product: Product; index: number; className?: string; contain?: boolean }) {
+// Photo du produit, ou un fond neutre avec l'initiale quand la vendeuse n'a pas encore mis de photo
+function ProductImage({ product, className = "", contain }: { product: Product; index?: number; className?: string; contain?: boolean }) {
   if (product.image_url) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img src={product.image_url} alt={product.name} loading="lazy" className={`${contain ? "bg-paper object-contain" : "object-cover"} ${className}`} />
     );
   }
-  const shape = SHAPE_WORDS.find(([re]) => re.test(product.name))?.[1] ?? "sac";
-  return <ProductArt shape={shape} tone={Math.max(index, 0)} className={className} />;
+  return (
+    <div className={`grid place-items-center bg-gradient-to-br from-[#f1ece5] to-[#e6dfd5] ${className}`}>
+      <span className="font-display text-4xl font-bold text-ink/15">{product.name.charAt(0).toUpperCase()}</span>
+    </div>
+  );
 }
 
 function ShopAvatar({ shop, initials, className = "" }: { shop: Shop; initials: string; className?: string }) {

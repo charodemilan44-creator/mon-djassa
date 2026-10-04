@@ -15,7 +15,7 @@ export const ABIDJAN_COMMUNES = [
 // Adresses déjà utilisées par l'application : une boutique ne peut pas les prendre
 export const RESERVED_SLUGS = new Set([
   "api", "aide", "admin", "auth", "connexion", "inscription", "deconnexion", "dashboard",
-  "tarifs", "prix", "support", "mondjassa", "boutique", "boutiques", "static", "public",
+  "tarifs", "prix", "exemple", "support", "mondjassa", "boutique", "boutiques", "static", "public",
   "favicon-ico", "robots-txt", "sitemap-xml", "_next",
 ]);
 

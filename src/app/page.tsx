@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo, LogoMark } from "@/components/Logo";
-import { ProductArt } from "@/components/ProductArt";
+import { DEMO_PRODUCTS, unsplash } from "@/lib/demo";
 import { PRICE_MONTHLY, PRICE_YEARLY, SUPPORT_WHATSAPP, formatFCFA, waLink } from "@/lib/utils";
 import { Pricing } from "./Pricing";
 
@@ -55,7 +55,7 @@ export default function Home() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/inscription" className="btn-primary px-7 py-4 text-base">Essayer gratuitement 1 mois</Link>
-              <a href="#comment" className="btn-ghost px-7 py-4 text-base">Voir comment ça marche</a>
+              <Link href="/exemple" className="btn-ghost px-7 py-4 text-base">Voir une boutique exemple</Link>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-mute">
               <span className="flex items-center gap-2"><Check /> Sans carte bancaire</span>
@@ -84,12 +84,13 @@ export default function Home() {
         <div className="mt-14 grid gap-4 md:grid-cols-6">
           <Feature className="md:col-span-4" title="Une vraie boutique à ton nom" text="Tes produits rangés par catégorie, avec photo et prix. Ta couleur, ton logo, ton lien mondjassa.ci/ta-boutique.">
             <div className="mt-6 grid grid-cols-4 gap-3">
-              {(["robe", "sac", "basket", "boucles"] as const).map((s, i) => (
-                <div key={s} className="overflow-hidden rounded-xl border border-line bg-white">
-                  <ProductArt shape={s} tone={i} className="aspect-square" />
+              {[DEMO_PRODUCTS[0], DEMO_PRODUCTS[1], DEMO_PRODUCTS[4], DEMO_PRODUCTS[3]].map((p) => (
+                <div key={p.name} className="overflow-hidden rounded-xl border border-line bg-white">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={unsplash(p.photo, 300)} alt={p.name} loading="lazy" className="aspect-square w-full bg-line object-cover" />
                   <div className="p-2">
-                    <div className="h-2 w-3/4 rounded bg-ink/10" />
-                    <div className="mt-1.5 text-xs font-bold">{formatFCFA([15000, 8500, 22000, 2500][i])}</div>
+                    <div className="truncate text-[11px] text-mute">{p.name}</div>
+                    <div className="mt-0.5 text-xs font-bold">{formatFCFA(p.price)}</div>
                   </div>
                 </div>
               ))}
@@ -259,10 +260,10 @@ function MiniChart() {
 /** Aperçu animé : la boutique sur téléphone, une carte de stats et une notification de commande */
 function HeroVisual() {
   const items = [
-    { name: "Robe wax manches longues", price: 15000, shape: "robe" },
-    { name: "Sac en raphia", price: 8500, shape: "sac" },
-    { name: "Sneakers blanches", price: 22000, shape: "basket" },
-    { name: "Boucles dorées", price: 2500, shape: "boucles" },
+    DEMO_PRODUCTS[0],
+    DEMO_PRODUCTS[1],
+    DEMO_PRODUCTS[7],
+    DEMO_PRODUCTS[3],
   ];
   return (
     <div className="relative mx-auto h-[600px] w-full max-w-[520px] animate-rise [animation-delay:150ms]" aria-label="Aperçu d'une boutique MonDjassa" role="img">
@@ -305,10 +306,11 @@ function HeroVisual() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2.5 p-3">
-            {items.map((it, i) => (
+            {items.map((it) => (
               <div key={it.name}>
                 <div className="relative overflow-hidden rounded-xl">
-                  <ProductArt shape={it.shape} tone={i} className="aspect-[4/5]" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={unsplash(it.photo, 300)} alt={it.name} className="aspect-[4/5] w-full bg-line object-cover" />
                   <span className="absolute right-1.5 bottom-1.5 grid size-6 place-items-center rounded-full bg-white text-sm font-bold shadow">+</span>
                 </div>
                 <p className="mt-1.5 truncate text-[11px] font-medium">{it.name}</p>
