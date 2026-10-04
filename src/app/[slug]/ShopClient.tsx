@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Category, DeliveryZone, Product, Shop } from "@/lib/types";
 import { SITE_URL, formatFCFA, waLink } from "@/lib/utils";
+import { ProductArt } from "@/components/ProductArt";
 
 type Cart = Record<string, number>;
 
@@ -75,110 +76,132 @@ export function ShopClient({
     });
 
   const accent = shop.color;
+  const initials = shop.name.split(/\s+/).slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join("");
 
   return (
-    <div style={{ "--accent": accent } as React.CSSProperties} className="min-h-dvh bg-stone-50 pb-28">
-      {/* En-tête de la boutique */}
-      <header className="relative">
-        {shop.banner_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={shop.banner_url} alt="" className="h-36 w-full object-cover md:h-52" />
-        ) : (
-          <div className="h-24 md:h-32" style={{ background: accent }} />
-        )}
-        <div className="mx-auto -mt-10 max-w-5xl px-4">
-          <div className="flex items-end gap-3">
-            {shop.logo_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={shop.logo_url} alt="" className="size-20 rounded-full border-4 border-white bg-white object-cover shadow" />
-            ) : (
-              <span className="grid size-20 place-items-center rounded-full border-4 border-white text-3xl font-extrabold text-white shadow" style={{ background: accent }}>
-                {shop.name.charAt(0).toUpperCase()}
-              </span>
+    <div style={{ "--accent": accent } as React.CSSProperties} className="min-h-dvh bg-paper pb-28">
+      {/* Barre du haut, toujours visible */}
+      <div className="sticky top-0 z-20 border-b border-line bg-white/85 backdrop-blur-xl">
+        <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
+          <ShopAvatar shop={shop} initials={initials} className="size-8 text-xs" />
+          <p className="min-w-0 flex-1 truncate font-display text-[15px] font-bold tight">{shop.name}</p>
+          <button type="button" onClick={() => count > 0 && setOpen(true)} className="relative grid size-10 place-items-center rounded-full border border-line bg-white transition hover:border-ink/30" aria-label="Mon panier">
+            <BagIcon className="size-5" />
+            {count > 0 && (
+              <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full px-1 text-[11px] font-bold leading-5 text-white" style={{ background: accent }}>{count}</span>
             )}
+          </button>
+        </div>
+      </div>
+
+      {/* Présentation de la boutique */}
+      <header className="mx-auto max-w-6xl px-4 pt-4 sm:px-6 sm:pt-6">
+        <div className="relative overflow-hidden rounded-3xl">
+          {shop.banner_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={shop.banner_url} alt="" className="h-40 w-full object-cover sm:h-64" />
+          ) : (
+            <div className="relative h-32 sm:h-48" style={{ background: `linear-gradient(135deg, ${accent}, color-mix(in srgb, ${accent} 55%, #121110))` }}>
+              <div className="absolute inset-0 opacity-[0.12] [background-image:radial-gradient(white_1px,transparent_1px)] [background-size:18px_18px]" />
+            </div>
+          )}
+        </div>
+        <div className="relative -mt-10 px-2 sm:-mt-8 sm:px-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
+            <ShopAvatar shop={shop} initials={initials} className="size-20 border-4 border-paper text-2xl shadow-lg sm:size-24" />
+            <div className="pb-1">
+              <h1 className="font-display text-2xl font-bold tight sm:text-3xl">{shop.name}</h1>
+              <p className="mt-0.5 flex items-center gap-1.5 text-sm text-mute">
+                <span className="size-2 rounded-full bg-leaf" /> Commandes sur WhatsApp
+              </p>
+            </div>
           </div>
-          <h1 className="mt-2 text-2xl font-extrabold">{shop.name}</h1>
-          {shop.description && <p className="mt-1 text-stone-600">{shop.description}</p>}
-          <div className="mt-2 flex flex-wrap gap-2 text-xs">
-            {shop.hours && <Pill>🕒 {shop.hours}</Pill>}
-            {zones.length > 0 && <Pill>🛵 Livraison : {zones.length > 3 ? `${zones.length} communes` : zones.map((z) => z.commune).join(", ")}</Pill>}
-            {shop.accepts_cash && <Pill>Paiement à la livraison</Pill>}
-            {shop.accepts_wave && <Pill>Wave</Pill>}
-            {shop.accepts_orange_money && <Pill>Orange Money</Pill>}
-          </div>
+        </div>
+        {shop.description && <p className="mt-4 max-w-2xl px-2 text-[15px] leading-relaxed text-ink/75 sm:px-6">{shop.description}</p>}
+        <div className="mt-4 flex flex-wrap gap-2 px-2 text-xs sm:px-6">
+          {shop.hours && <Pill icon={<ClockIcon />}>{shop.hours}</Pill>}
+          {zones.length > 0 && (
+            <Pill icon={<TruckIcon />}>
+              Livraison {zones.length > 3 ? `dans ${zones.length} communes` : `à ${zones.map((z) => z.commune).join(", ")}`}
+            </Pill>
+          )}
+          {shop.accepts_cash && <Pill>Paiement à la livraison</Pill>}
+          {shop.accepts_wave && <Pill>Wave</Pill>}
+          {shop.accepts_orange_money && <Pill>Orange Money</Pill>}
         </div>
       </header>
 
-      {/* Filtres */}
-      <div className="sticky top-0 z-10 mt-4 border-b border-stone-200 bg-stone-50/95 backdrop-blur">
-        <div className="mx-auto max-w-5xl space-y-2 px-4 py-2">
-          {products.length > 8 && (
-            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="🔎 Rechercher un produit" className="input py-2" />
-          )}
+      {/* Recherche et catégories */}
+      <div className="sticky top-14 z-10 mt-6 border-y border-line bg-paper/90 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-2.5 sm:flex-row sm:items-center sm:px-6">
           {usedCategories.length > 0 && (
-            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+            <div className="-mx-4 flex flex-1 gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0 [scrollbar-width:none]">
               <Chip active={filter === "all"} onClick={() => setFilter("all")}>Tout</Chip>
               {usedCategories.map((c) => (
                 <Chip key={c.id} active={filter === c.id} onClick={() => setFilter(c.id)}>{c.name}</Chip>
               ))}
             </div>
           )}
+          {products.length > 6 && (
+            <label className="relative sm:ml-auto sm:w-64">
+              <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-mute" />
+              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Rechercher" className="w-full rounded-full border border-line bg-white py-2 pl-10 pr-4 text-sm outline-none transition focus:border-ink/40" />
+            </label>
+          )}
         </div>
       </div>
 
       {/* Produits */}
-      <main className="mx-auto max-w-5xl px-4 py-4">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        <p className="mb-4 text-sm text-mute">{visible.length} produit{visible.length > 1 ? "s" : ""}</p>
         {visible.length === 0 ? (
-          <p className="py-16 text-center text-stone-500">{products.length ? "Aucun produit ne correspond." : "Les produits arrivent bientôt."}</p>
+          <p className="py-16 text-center text-mute">{products.length ? "Aucun produit ne correspond." : "Les produits arrivent bientôt."}</p>
         ) : (
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {visible.map((p) => {
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-4">
+            {visible.map((p, i) => {
               const qty = cart[p.id] ?? 0;
               return (
-                <li key={p.id} className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
-                  <button type="button" onClick={() => setZoom(p)} className="relative aspect-square bg-stone-100">
-                    {p.image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.image_url} alt={p.name} loading="lazy" className="size-full object-cover" />
-                    ) : (
-                      <span className="grid size-full place-items-center text-4xl">📦</span>
-                    )}
+                <li key={p.id} className="group animate-rise" style={{ animationDelay: `${Math.min(i, 12) * 40}ms` }}>
+                  <div className="relative overflow-hidden rounded-2xl bg-white ring-1 ring-line">
+                    <button type="button" onClick={() => setZoom(p)} className="block w-full" aria-label={`Voir ${p.name}`}>
+                      <ProductImage product={p} index={i} className="aspect-[4/5] w-full transition duration-500 group-hover:scale-[1.04]" />
+                    </button>
                     {!p.in_stock && (
-                      <span className="absolute top-2 left-2 rounded-full bg-stone-900/80 px-2 py-0.5 text-xs font-bold text-white">Épuisé</span>
+                      <span className="absolute left-2.5 top-2.5 rounded-full bg-ink/85 px-2.5 py-1 text-[11px] font-semibold text-white">Épuisé</span>
                     )}
-                  </button>
-                  <div className="flex flex-1 flex-col p-2.5">
-                    <p className="line-clamp-2 text-sm font-semibold">{p.name}</p>
-                    <p className="mt-0.5 font-extrabold" style={{ color: accent }}>{formatFCFA(p.price)}</p>
-                    <div className="mt-auto pt-2">
-                      {!p.in_stock ? (
-                        <span className="block rounded-xl bg-stone-100 py-2 text-center text-sm text-stone-400">Indisponible</span>
-                      ) : qty === 0 ? (
-                        <button type="button" onClick={() => setQty(p.id, 1)} className="w-full rounded-xl py-2 text-sm font-bold text-white" style={{ background: accent }}>
-                          Ajouter
-                        </button>
-                      ) : (
-                        <Stepper qty={qty} onChange={(n) => setQty(p.id, n)} />
-                      )}
-                    </div>
+                    {p.in_stock && (
+                      <div className="absolute bottom-2.5 right-2.5">
+                        {qty === 0 ? (
+                          <button type="button" onClick={() => setQty(p.id, 1)} className="grid size-10 place-items-center rounded-full bg-white text-ink shadow-lg shadow-ink/10 ring-1 ring-line transition hover:scale-105 active:scale-95" aria-label={`Ajouter ${p.name}`}>
+                            <PlusIcon className="size-5" />
+                          </button>
+                        ) : (
+                          <Stepper qty={qty} onChange={(n) => setQty(p.id, n)} floating />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-2.5 px-0.5">
+                    <p className="line-clamp-2 text-sm font-medium leading-snug">{p.name}</p>
+                    <p className="mt-1 text-[15px] font-bold">{formatFCFA(p.price)}</p>
                   </div>
                 </li>
               );
             })}
           </ul>
         )}
-        <p className="mt-10 text-center text-xs text-stone-400">
-          <a href={SITE_URL}>Boutique créée avec MonDjassa</a>
-        </p>
+        <a href={SITE_URL} className="mx-auto mt-16 flex w-fit items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-xs text-mute transition hover:text-ink">
+          Boutique créée avec <span className="font-display font-bold text-ink">mon<span className="text-brand">djassa</span></span>
+        </a>
       </main>
 
       {/* Barre panier */}
       {count > 0 && !open && (
         <div className="fixed inset-x-0 bottom-0 z-20 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-          <button type="button" onClick={() => setOpen(true)} className="btn-whatsapp mx-auto flex w-full max-w-md justify-between shadow-lg">
-            <span className="rounded-lg bg-white/25 px-2 py-0.5 text-sm">{count}</span>
-            <span>Voir mon panier</span>
-            <span>{formatFCFA(subtotal)}</span>
+          <button type="button" onClick={() => setOpen(true)} className="animate-rise mx-auto flex w-full max-w-md items-center gap-3 rounded-full bg-ink py-2 pl-2 pr-5 text-white shadow-2xl shadow-ink/30">
+            <span className="grid size-10 place-items-center rounded-full text-sm font-bold" style={{ background: accent }}>{count}</span>
+            <span className="flex-1 text-left text-sm font-semibold">Voir mon panier</span>
+            <span className="text-sm font-bold">{formatFCFA(subtotal)}</span>
           </button>
         </div>
       )}
@@ -186,29 +209,68 @@ export function ShopClient({
       {open && <Checkout shop={shop} zones={zones} lines={lines} subtotal={subtotal} setQty={setQty} onClose={() => setOpen(false)} onSent={() => setCart({})} />}
 
       {zoom && (
-        <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/60 sm:items-center" onClick={() => setZoom(null)}>
-          <div className="w-full max-w-md overflow-hidden rounded-t-3xl bg-white sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
-            {zoom.image_url && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={zoom.image_url} alt={zoom.name} className="max-h-[60vh] w-full object-contain bg-stone-100" />
-            )}
-            <div className="space-y-2 p-4">
-              <p className="text-lg font-bold">{zoom.name}</p>
-              <p className="text-xl font-extrabold" style={{ color: accent }}>{formatFCFA(zoom.price)}</p>
-              {zoom.description && <p className="whitespace-pre-line text-sm text-stone-600">{zoom.description}</p>}
-              <div className="flex gap-2 pt-2">
-                <button type="button" onClick={() => setZoom(null)} className="btn-ghost flex-1">Fermer</button>
-                {zoom.in_stock && (
-                  <button type="button" className="btn flex-1 text-white" style={{ background: accent }}
-                    onClick={() => { setQty(zoom.id, (cart[zoom.id] ?? 0) + 1); setZoom(null); }}>
-                    Ajouter au panier
-                  </button>
-                )}
-              </div>
+        <Sheet onClose={() => setZoom(null)}>
+          <ProductImage product={zoom} index={products.indexOf(zoom)} className="aspect-square max-h-[55vh] w-full" contain />
+          <div className="space-y-2 p-5">
+            <p className="font-display text-xl font-bold tight">{zoom.name}</p>
+            <p className="text-lg font-bold" style={{ color: accent }}>{formatFCFA(zoom.price)}</p>
+            {zoom.description && <p className="whitespace-pre-line text-sm leading-relaxed text-mute">{zoom.description}</p>}
+            <div className="flex gap-2 pt-3">
+              <button type="button" onClick={() => setZoom(null)} className="btn-ghost flex-1">Fermer</button>
+              {zoom.in_stock && (
+                <button type="button" className="btn flex-1 bg-ink text-white hover:bg-ink/90"
+                  onClick={() => { setQty(zoom.id, (cart[zoom.id] ?? 0) + 1); setZoom(null); }}>
+                  Ajouter au panier
+                </button>
+              )}
             </div>
           </div>
-        </div>
+        </Sheet>
       )}
+    </div>
+  );
+}
+
+// Image du produit, ou un visuel dessiné quand la vendeuse n'a pas mis de photo
+const SHAPE_WORDS: [RegExp, string][] = [
+  [/robe|jupe|ensemble|tenue|boubou|chemise|haut|top/i, "robe"],
+  [/sac|pochette|panier/i, "sac"],
+  [/basket|chaussure|sandale|talon|mule|claquette/i, "basket"],
+  [/boucle|collier|bracelet|bijou|bague/i, "boucles"],
+  [/parfum|huile|lait|crème|creme|savon|beurre/i, "parfum"],
+  [/rouge|gloss|maquillage|vernis|mascara/i, "rouge"],
+  [/montre/i, "montre"],
+  [/pagne|wax|tissu|foulard|bazin/i, "pagne"],
+];
+
+function ProductImage({ product, index, className = "", contain }: { product: Product; index: number; className?: string; contain?: boolean }) {
+  if (product.image_url) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={product.image_url} alt={product.name} loading="lazy" className={`${contain ? "bg-paper object-contain" : "object-cover"} ${className}`} />
+    );
+  }
+  const shape = SHAPE_WORDS.find(([re]) => re.test(product.name))?.[1] ?? "sac";
+  return <ProductArt shape={shape} tone={Math.max(index, 0)} className={className} />;
+}
+
+function ShopAvatar({ shop, initials, className = "" }: { shop: Shop; initials: string; className?: string }) {
+  return shop.logo_url ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={shop.logo_url} alt="" className={`shrink-0 rounded-full bg-white object-cover ${className}`} />
+  ) : (
+    <span className={`grid shrink-0 place-items-center rounded-full font-display font-bold text-white ${className}`} style={{ background: shop.color }}>
+      {initials}
+    </span>
+  );
+}
+
+function Sheet({ onClose, children }: { onClose: () => void; children: React.ReactNode }) {
+  return (
+    <div className="fixed inset-0 z-40 flex items-end justify-center bg-ink/50 backdrop-blur-sm sm:items-center sm:p-6" onClick={onClose}>
+      <div className="animate-rise max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]" onClick={(e) => e.stopPropagation()}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -275,34 +337,29 @@ function Checkout({
   }
 
   return (
-    <div className="fixed inset-0 z-30 flex items-end justify-center bg-black/50 sm:items-center" onClick={onClose}>
-      <div className="max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white p-4 sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-extrabold">Mon panier</h2>
-          <button type="button" onClick={onClose} className="grid size-9 place-items-center rounded-full bg-stone-100" aria-label="Fermer">×</button>
-        </div>
+    <Sheet onClose={onClose}>
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-white/90 px-5 py-4 backdrop-blur">
+        <h2 className="font-display text-lg font-bold tight">Mon panier</h2>
+        <button type="button" onClick={onClose} className="grid size-9 place-items-center rounded-full border border-line text-mute transition hover:text-ink" aria-label="Fermer">
+          <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M5 5l10 10M15 5L5 15" /></svg>
+        </button>
+      </div>
 
-        <ul className="divide-y divide-stone-100">
-          {lines.map((l) => (
-            <li key={l.product.id} className="flex items-center gap-3 py-2">
-              {l.product.image_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={l.product.image_url} alt="" className="size-12 rounded-lg object-cover" />
-              ) : (
-                <span className="grid size-12 place-items-center rounded-lg bg-stone-100">📦</span>
-              )}
+      <div className="p-5">
+        <ul className="space-y-3">
+          {lines.map((l, i) => (
+            <li key={l.product.id} className="flex items-center gap-3">
+              <ProductImage product={l.product} index={i} className="size-14 shrink-0 rounded-xl" />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold">{l.product.name}</p>
-                <p className="text-sm text-stone-500">{formatFCFA(l.product.price * l.qty)}</p>
+                <p className="truncate text-sm font-medium">{l.product.name}</p>
+                <p className="text-sm font-bold">{formatFCFA(l.product.price * l.qty)}</p>
               </div>
-              <div className="w-28">
-                <Stepper qty={l.qty} onChange={(n) => setQty(l.product.id, n)} />
-              </div>
+              <Stepper qty={l.qty} onChange={(n) => setQty(l.product.id, n)} />
             </li>
           ))}
         </ul>
 
-        <div className="mt-4 space-y-3">
+        <div className="mt-6 space-y-4 border-t border-line pt-5">
           {zones.length > 0 && (
             <div>
               <label className="label" htmlFor="zone">Ta commune</label>
@@ -336,28 +393,34 @@ function Checkout({
           )}
         </div>
 
-        <div className="mt-4 space-y-1 rounded-xl bg-stone-50 p-3 text-sm">
+        <div className="mt-6 space-y-2 rounded-2xl bg-paper p-4 text-sm">
           <Row label="Sous-total" value={formatFCFA(subtotal)} />
           {zone && <Row label={`Livraison (${zone.commune})`} value={zone.fee ? formatFCFA(zone.fee) : "Gratuite"} />}
-          <Row label="Total" value={formatFCFA(total)} bold />
+          <div className="border-t border-line pt-2">
+            <Row label="Total" value={formatFCFA(total)} bold />
+          </div>
         </div>
 
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-        <button type="button" onClick={send} className="btn-whatsapp mt-4 w-full text-lg">
-          Envoyer ma commande sur WhatsApp
+        <button type="button" onClick={send} className="btn-whatsapp mt-5 w-full py-3.5 text-base">
+          Commander sur WhatsApp
         </button>
-        <p className="mt-2 text-center text-xs text-stone-500">WhatsApp va s&apos;ouvrir avec ta commande déjà écrite. Tu n&apos;as plus qu&apos;à l&apos;envoyer.</p>
+        <p className="mt-3 text-center text-xs text-mute">WhatsApp s&apos;ouvre avec ta commande déjà écrite. Tu n&apos;as plus qu&apos;à l&apos;envoyer.</p>
       </div>
-    </div>
+    </Sheet>
   );
 }
 
-function Stepper({ qty, onChange }: { qty: number; onChange: (n: number) => void }) {
+function Stepper({ qty, onChange, floating }: { qty: number; onChange: (n: number) => void; floating?: boolean }) {
   return (
-    <div className="flex items-center justify-between rounded-xl bg-stone-100">
-      <button type="button" onClick={() => onChange(qty - 1)} className="grid size-9 place-items-center text-lg font-bold" aria-label="Retirer un">−</button>
-      <span className="text-sm font-bold">{qty}</span>
-      <button type="button" onClick={() => onChange(qty + 1)} className="grid size-9 place-items-center text-lg font-bold" aria-label="Ajouter un">+</button>
+    <div className={`flex h-10 items-center rounded-full ${floating ? "bg-ink text-white shadow-lg shadow-ink/20" : "border border-line bg-white"}`}>
+      <button type="button" onClick={() => onChange(qty - 1)} className="grid size-10 place-items-center" aria-label="Retirer un">
+        <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden><path d="M5 10h10" /></svg>
+      </button>
+      <span className="min-w-4 text-center text-sm font-bold">{qty}</span>
+      <button type="button" onClick={() => onChange(qty + 1)} className="grid size-10 place-items-center" aria-label="Ajouter un">
+        <PlusIcon className="size-4" />
+      </button>
     </div>
   );
 }
@@ -367,23 +430,44 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold ring-1 ${active ? "text-white ring-transparent" : "bg-white text-stone-700 ring-stone-200"}`}
-      style={active ? { background: "var(--accent)" } : undefined}
+      className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition ${active ? "border-ink bg-ink text-white" : "border-line bg-white text-ink/70 hover:border-ink/30 hover:text-ink"}`}
     >
       {children}
     </button>
   );
 }
 
-function Pill({ children }: { children: React.ReactNode }) {
-  return <span className="rounded-full bg-white px-3 py-1 text-stone-600 ring-1 ring-stone-200">{children}</span>;
+function Pill({ icon, children }: { icon?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-ink/70">
+      {icon}
+      {children}
+    </span>
+  );
 }
 
 function Row({ label, value, bold }: { label: string; value: string; bold?: boolean }) {
   return (
-    <div className={`flex justify-between ${bold ? "pt-1 text-base font-extrabold" : "text-stone-600"}`}>
+    <div className={`flex justify-between ${bold ? "text-base font-bold" : "text-mute"}`}>
       <span>{label}</span>
       <span>{value}</span>
     </div>
   );
+}
+
+const ico = { fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+function BagIcon({ className }: { className?: string }) {
+  return <svg viewBox="0 0 24 24" className={className} {...ico} aria-hidden><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 016 0v2" /></svg>;
+}
+function PlusIcon({ className }: { className?: string }) {
+  return <svg viewBox="0 0 20 20" className={className} {...ico} strokeWidth={2.2} aria-hidden><path d="M10 4v12M4 10h12" /></svg>;
+}
+function SearchIcon({ className }: { className?: string }) {
+  return <svg viewBox="0 0 24 24" className={className} {...ico} strokeWidth={2} aria-hidden><circle cx="11" cy="11" r="6.5" /><path d="M20 20l-4-4" /></svg>;
+}
+function ClockIcon() {
+  return <svg viewBox="0 0 24 24" className="size-3.5" {...ico} strokeWidth={2} aria-hidden><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg>;
+}
+function TruckIcon() {
+  return <svg viewBox="0 0 24 24" className="size-3.5" {...ico} strokeWidth={2} aria-hidden><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7" /><circle cx="7" cy="17.5" r="1.8" /><circle cx="17" cy="17.5" r="1.8" /></svg>;
 }
