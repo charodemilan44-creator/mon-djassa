@@ -6,7 +6,7 @@ export const PRICE_YEARLY = 25000;
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
 export const SUPPORT_WHATSAPP = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || "";
 /** Lien de paiement Wave de MonDjassa : les vendeuses y paient leur abonnement. */
-export const WAVE_PAY_LINK = process.env.NEXT_PUBLIC_WAVE_PAY_LINK || "";
+export const WAVE_PAY_LINK = process.env.NEXT_PUBLIC_WAVE_PAY_LINK || "https://pay.wave.com/m/M_ci_No3HGRDDC3YB/c/ci/";
 
 /** Ajoute le montant au lien Wave quand le lien l'accepte (liens pay.wave.com). */
 export function wavePayUrl(amount: number) {
