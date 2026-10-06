@@ -5,6 +5,17 @@ export const PRICE_YEARLY = 25000;
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
 export const SUPPORT_WHATSAPP = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || "";
+/** Lien de paiement Wave de MonDjassa : les vendeuses y paient leur abonnement. */
+export const WAVE_PAY_LINK = process.env.NEXT_PUBLIC_WAVE_PAY_LINK || "";
+
+/** Ajoute le montant au lien Wave quand le lien l'accepte (liens pay.wave.com). */
+export function wavePayUrl(amount: number) {
+  if (!WAVE_PAY_LINK) return "";
+  if (!/pay\.wave\.com/.test(WAVE_PAY_LINK)) return WAVE_PAY_LINK;
+  const url = new URL(WAVE_PAY_LINK);
+  url.searchParams.set("amount", String(amount));
+  return url.toString();
+}
 
 export const ABIDJAN_COMMUNES = [
   "Abobo", "Adjamé", "Anyama", "Attécoubé", "Bingerville", "Cocody", "Grand-Bassam",
