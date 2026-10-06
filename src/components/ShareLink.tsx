@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export function ShareLink({ url, shopName }: { url: string; shopName: string }) {
   const [copied, setCopied] = useState(false);
-  const message = `🛍️ Découvre ma boutique ${shopName} ! Tous mes produits et mes prix sont ici, tu commandes directement sur WhatsApp 👉 ${url}`;
+  const message = `Découvre ma boutique ${shopName} ! Tous mes produits et mes prix sont ici, tu commandes directement sur WhatsApp : ${url}`;
 
   async function copy() {
     try {
@@ -18,10 +18,10 @@ export function ShareLink({ url, shopName }: { url: string; shopName: string }) 
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2">
+      <div className="flex items-center gap-2 rounded-xl bg-sand px-3 py-2">
         <span className="min-w-0 flex-1 truncate font-mono text-sm">{url.replace(/^https?:\/\//, "")}</span>
         <button type="button" onClick={copy} className="rounded-lg bg-white px-3 py-1.5 text-sm font-semibold shadow-sm">
-          {copied ? "Copié ✓" : "Copier"}
+          {copied ? "Copié" : "Copier"}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">
@@ -32,7 +32,7 @@ export function ShareLink({ url, shopName }: { url: string; shopName: string }) 
           Voir ma boutique
         </a>
       </div>
-      <p className="text-xs text-stone-500">
+      <p className="text-xs text-mute">
         Astuce : « Partager sur WhatsApp » te permet d&apos;envoyer le lien à tes contacts ou de le copier dans ton statut.
       </p>
     </div>

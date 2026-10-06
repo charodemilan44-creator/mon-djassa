@@ -17,14 +17,14 @@ export function DashboardNav() {
     href === "/dashboard" ? pathname === href : pathname.startsWith(href) || (href.endsWith("boutique") && pathname.startsWith("/dashboard/livraison"));
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-stone-200 bg-white pb-[env(safe-area-inset-bottom)] md:static md:border-0 md:bg-transparent md:pb-0">
+    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] md:static md:border-0 md:bg-transparent md:pb-0">
       <ul className="mx-auto flex max-w-3xl justify-around md:justify-start md:gap-1">
         {items.map((it) => (
           <li key={it.href}>
             <Link
               href={it.href}
               className={`flex flex-col items-center gap-0.5 px-2 py-2 text-[11px] font-semibold md:flex-row md:gap-2 md:rounded-lg md:px-3 md:text-sm ${
-                isActive(it.href) ? "text-brand md:bg-brand/10" : "text-stone-500 hover:text-stone-800"
+                isActive(it.href) ? "text-brand md:bg-brand/10" : "text-mute hover:text-ink"
               }`}
             >
               <svg viewBox="0 0 24 24" className="size-6 md:size-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

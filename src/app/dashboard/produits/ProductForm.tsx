@@ -40,7 +40,7 @@ export function ProductForm({ userId, categories, product }: { userId: string; c
         <label className="label" htmlFor="description">Description (facultatif)</label>
         <textarea id="description" name="description" rows={3} maxLength={600} className="input" defaultValue={product?.description ?? ""} placeholder="Tailles, couleurs, matière…" />
       </div>
-      <label className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-stone-200">
+      <label className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-line">
         <input type="checkbox" name="in_stock" defaultChecked={product?.in_stock ?? true} className="size-5 accent-[var(--color-leaf)]" />
         <span className="font-medium">Disponible (en stock)</span>
       </label>

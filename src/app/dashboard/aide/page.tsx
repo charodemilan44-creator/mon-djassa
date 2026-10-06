@@ -12,7 +12,7 @@ const tips = [
 export default function HelpPage() {
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-extrabold">Aide</h1>
+      <h1 className="font-display text-2xl font-bold tight">Aide</h1>
       {/* TODO : ajouter les tutoriels vidéo (TikTok / YouTube) quand ils seront tournés. */}
       <div className="space-y-3">
         {tips.map((t) => (
@@ -21,7 +21,7 @@ export default function HelpPage() {
               {t.q}
               <span className="text-brand transition group-open:rotate-45">+</span>
             </summary>
-            <p className="mt-2 text-stone-600">{t.a}</p>
+            <p className="mt-2 text-mute">{t.a}</p>
           </details>
         ))}
       </div>

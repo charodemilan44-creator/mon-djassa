@@ -1,20 +1,23 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { requireShop } from "@/lib/shop";
+import { isAdmin, requireShop } from "@/lib/shop";
 import { signOut } from "../connexion/actions";
 import { DashboardNav } from "./DashboardNav";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { shop, access } = await requireShop({ allowExpired: true });
+  const [{ shop, access }, admin] = await Promise.all([requireShop({ allowExpired: true }), isAdmin()]);
 
   return (
     <div className="min-h-dvh pb-24 md:pb-10">
-      <header className="border-b border-stone-200 bg-white">
+      <header className="border-b border-line bg-white">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
           <Logo />
+          <div className="flex items-center gap-4">
+          {admin && <Link href="/admin" className="text-sm font-semibold text-brand">Admin</Link>}
           <form action={signOut}>
-            <button className="text-sm font-semibold text-stone-500 hover:text-stone-800">Déconnexion</button>
+            <button className="text-sm font-semibold text-mute hover:text-ink">Déconnexion</button>
           </form>
+          </div>
         </div>
         <div className="mx-auto hidden max-w-3xl px-4 pb-2 md:block">
           <DashboardNav />

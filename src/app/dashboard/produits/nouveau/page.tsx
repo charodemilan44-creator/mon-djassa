@@ -10,9 +10,9 @@ export default async function NewProductPage({ searchParams }: { searchParams: P
 
   return (
     <div className="space-y-4">
-      <Link href="/dashboard/produits" className="text-sm font-semibold text-stone-500">← Mes produits</Link>
-      <h1 className="text-2xl font-extrabold">Nouveau produit</h1>
-      {ajoute && <p className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-800">Produit ajouté ✓ Tu peux en mettre un autre.</p>}
+      <Link href="/dashboard/produits" className="text-sm font-semibold text-mute">← Mes produits</Link>
+      <h1 className="font-display text-2xl font-bold tight">Nouveau produit</h1>
+      {ajoute && <p className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-800">Produit ajouté. Tu peux en mettre un autre.</p>}
       <ProductForm key={ajoute ? Date.now() : "new"} userId={user.id} categories={categories ?? []} />
     </div>
   );

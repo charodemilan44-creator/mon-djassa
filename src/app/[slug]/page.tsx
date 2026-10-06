@@ -44,10 +44,10 @@ export default async function PublicShopPage({ params }: { params: Promise<{ slu
     return (
       <main className="mx-auto grid min-h-dvh max-w-md place-items-center px-6 text-center">
         <div>
-          <p className="text-5xl">🛍️</p>
-          <h1 className="mt-4 text-2xl font-extrabold">{paused.name}</h1>
-          <p className="mt-2 text-stone-600">Cette boutique est momentanément indisponible. Reviens bientôt !</p>
-          <Link href="/" className="mt-6 inline-block text-sm text-stone-400">Propulsé par MonDjassa</Link>
+          <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-ink text-white"><svg viewBox="0 0 24 24" className="size-7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 016 0v2" /></svg></span>
+          <h1 className="mt-4 font-display text-2xl font-bold tight">{paused.name}</h1>
+          <p className="mt-2 text-mute">Cette boutique est momentanément indisponible. Reviens bientôt !</p>
+          <Link href="/" className="mt-6 inline-block text-sm text-mute">Propulsé par MonDjassa</Link>
         </div>
       </main>
     );

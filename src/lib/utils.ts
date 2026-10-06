@@ -7,6 +7,17 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3
 /** Adresse affichée aux vendeuses, sans https:// (ex : mondjassa.netlify.app) */
 export const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
 export const SUPPORT_WHATSAPP = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || "";
+/** Lien de paiement Wave de MonDjassa : les vendeuses y paient leur abonnement. */
+export const WAVE_PAY_LINK = process.env.NEXT_PUBLIC_WAVE_PAY_LINK || "https://pay.wave.com/m/M_ci_No3HGRDDC3YB/c/ci/";
+
+/** Ajoute le montant au lien Wave quand le lien l'accepte (liens pay.wave.com). */
+export function wavePayUrl(amount: number) {
+  if (!WAVE_PAY_LINK) return "";
+  if (!/pay\.wave\.com/.test(WAVE_PAY_LINK)) return WAVE_PAY_LINK;
+  const url = new URL(WAVE_PAY_LINK);
+  url.searchParams.set("amount", String(amount));
+  return url.toString();
+}
 
 export const ABIDJAN_COMMUNES = [
   "Abobo", "Adjamé", "Anyama", "Attécoubé", "Bingerville", "Cocody", "Grand-Bassam",
@@ -17,7 +28,7 @@ export const ABIDJAN_COMMUNES = [
 // Adresses déjà utilisées par l'application : une boutique ne peut pas les prendre
 export const RESERVED_SLUGS = new Set([
   "api", "aide", "admin", "auth", "connexion", "inscription", "deconnexion", "dashboard",
-  "tarifs", "prix", "support", "mondjassa", "boutique", "boutiques", "static", "public",
+  "tarifs", "prix", "exemple", "support", "mondjassa", "boutique", "boutiques", "static", "public",
   "favicon-ico", "robots-txt", "sitemap-xml", "_next",
 ]);
 

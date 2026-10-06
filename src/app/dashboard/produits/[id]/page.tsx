@@ -16,8 +16,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
 
   return (
     <div className="space-y-4">
-      <Link href="/dashboard/produits" className="text-sm font-semibold text-stone-500">← Mes produits</Link>
-      <h1 className="text-2xl font-extrabold">Modifier le produit</h1>
+      <Link href="/dashboard/produits" className="text-sm font-semibold text-mute">← Mes produits</Link>
+      <h1 className="font-display text-2xl font-bold tight">Modifier le produit</h1>
       <ProductForm userId={user.id} categories={categories ?? []} product={product} />
       <form action={deleteProduct} className="pt-4">
         <input type="hidden" name="id" value={product.id} />
