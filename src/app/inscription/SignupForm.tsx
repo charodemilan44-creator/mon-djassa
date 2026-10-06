@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { FormMessage } from "@/components/FormMessage";
 import { SubmitButton } from "@/components/SubmitButton";
-import { slugify } from "@/lib/utils";
+import { slugify, SITE_HOST } from "@/lib/utils";
 import { signUp } from "./actions";
 
 export function SignupForm({ withAccount }: { withAccount: boolean }) {
@@ -23,7 +23,7 @@ export function SignupForm({ withAccount }: { withAccount: boolean }) {
       <div>
         <label className="label" htmlFor="slug">Ton lien</label>
         <div className="flex items-center rounded-xl border border-line bg-white focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20">
-          <span className="pl-4 text-mute">mondjassa.ci/</span>
+          <span className="pl-4 text-mute">{SITE_HOST}/</span>
           <input id="slug" name="slug" required className="w-full rounded-r-xl bg-transparent py-3 pr-4 outline-none"
             value={shownSlug} onChange={(e) => { setSlugEdited(true); setSlug(slugify(e.target.value)); }} />
         </div>

@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import type { FormState } from "@/components/FormMessage";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { RESERVED_SLUGS, normalizePhone, phoneToAuthEmail, slugify } from "@/lib/utils";
+import { RESERVED_SLUGS, normalizePhone, phoneToAuthEmail, slugify, SITE_HOST } from "@/lib/utils";
 
 export async function signUp(_prev: FormState, formData: FormData): Promise<FormState> {
   const shopName = String(formData.get("shop_name") ?? "").trim();
@@ -22,7 +22,7 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
   } = await supabase.auth.getUser();
 
   const { data: taken } = await supabase.from("shops").select("id").eq("slug", slug).maybeSingle();
-  if (taken) return { error: `Le lien mondjassa.ci/${slug} est déjà pris. Essaie une autre variante.` };
+  if (taken) return { error: `Le lien ${SITE_HOST}/${slug} est déjà pris. Essaie une autre variante.` };
 
   let userId = current?.id;
   let createdNow = false;
@@ -56,7 +56,7 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
       await supabase.auth.signOut();
       await createServiceClient().auth.admin.deleteUser(userId);
     }
-    if (shopError.code === "23505") return { error: `Le lien mondjassa.ci/${slug} est déjà pris.` };
+    if (shopError.code === "23505") return { error: `Le lien ${SITE_HOST}/${slug} est déjà pris.` };
     return { error: "Impossible de créer la boutique pour le moment. Réessaie." };
   }
 

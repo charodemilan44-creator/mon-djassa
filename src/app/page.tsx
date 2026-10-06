@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo, LogoMark } from "@/components/Logo";
 import { DEMO_PRODUCTS, unsplash } from "@/lib/demo";
-import { PRICE_MONTHLY, PRICE_YEARLY, SUPPORT_WHATSAPP, formatFCFA, waLink } from "@/lib/utils";
+import { PRICE_MONTHLY, PRICE_YEARLY, SUPPORT_WHATSAPP, formatFCFA, waLink, SITE_HOST } from "@/lib/utils";
 import { Pricing } from "./Pricing";
 
 const CATEGORIES = ["Mode & pagne", "Perruques & mèches", "Cosmétiques", "Sneakers", "Bijoux", "Attiéké & plats", "Téléphones", "Déco maison", "Enfants", "Parfums"];
@@ -82,7 +82,7 @@ export default function Home() {
       <section id="fonctionnalites" className="mx-auto max-w-6xl scroll-mt-16 px-4 py-14 sm:px-6 sm:py-24">
         <SectionHead kicker="Fonctionnalités" title="Tout ce qu'il faut pour vendre, rien de compliqué" />
         <div className="mt-8 grid gap-3 sm:mt-14 sm:gap-4 md:grid-cols-6">
-          <Feature className="md:col-span-4" title="Une vraie boutique à ton nom" text="Tes produits rangés par catégorie, avec photo et prix. Ta couleur, ton logo, ton lien mondjassa.ci/ta-boutique.">
+          <Feature className="md:col-span-4" title="Une vraie boutique à ton nom" text={`Tes produits rangés par catégorie, avec photo et prix. Ta couleur, ton logo, ton lien ${SITE_HOST}/ta-boutique.`}>
             <div className="mt-5 grid grid-cols-4 gap-2 sm:mt-6 sm:gap-3">
               {[DEMO_PRODUCTS[0], DEMO_PRODUCTS[1], DEMO_PRODUCTS[4], DEMO_PRODUCTS[3]].map((p) => (
                 <div key={p.name} className="overflow-hidden rounded-xl border border-line bg-white">
@@ -296,7 +296,7 @@ function HeroVisual() {
               <span className="grid size-9 place-items-center rounded-full bg-brand font-display text-xs font-bold">AC</span>
               <div>
                 <p className="font-display text-base font-bold">Awa Couture</p>
-                <p className="text-[10px] text-white/60">mondjassa.ci/awa-couture</p>
+                <p className="text-[10px] text-white/60">{SITE_HOST}/awa-couture</p>
               </div>
             </div>
             <div className="mt-3 flex gap-1.5 text-[10px] font-semibold">

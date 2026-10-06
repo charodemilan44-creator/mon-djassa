@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { requireAdmin } from "@/lib/shop";
 import { createServiceClient } from "@/lib/supabase/server";
-import { displayPhone, formatDate, formatFCFA, shopAccess } from "@/lib/utils";
+import { displayPhone, formatDate, formatFCFA, shopAccess, SITE_HOST } from "@/lib/utils";
 import { approveRequest, rejectRequest } from "./actions";
 
 export const metadata: Metadata = { title: "Admin" };
@@ -65,7 +65,7 @@ export default async function AdminPage() {
                   <div className="min-w-0">
                     <p className="truncate font-semibold">{r.shops?.name ?? "Boutique supprimée"}</p>
                     <p className="text-xs text-mute">
-                      mondjassa.ci/{r.shops?.slug} · {r.shops ? displayPhone(r.shops.whatsapp) : ""}
+                      {SITE_HOST}/{r.shops?.slug} · {r.shops ? displayPhone(r.shops.whatsapp) : ""}
                     </p>
                   </div>
                   <p className="shrink-0 text-right">
