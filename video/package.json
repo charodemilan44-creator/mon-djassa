@@ -6,6 +6,8 @@
     "render": "remotion render MonDjassaPromo out/mondjassa-promo.mp4"
   },
   "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/manrope": "^5.3.0",
     "@remotion/cli": "4.0.532",
     "react": "19.2.0",
     "react-dom": "19.2.0",
