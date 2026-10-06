@@ -9,11 +9,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-dvh pb-24 md:pb-10">
-      <header className="border-b border-stone-200 bg-white">
+      <header className="border-b border-line bg-white">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
           <Logo />
           <form action={signOut}>
-            <button className="text-sm font-semibold text-stone-500 hover:text-stone-800">Déconnexion</button>
+            <button className="text-sm font-semibold text-mute hover:text-ink">Déconnexion</button>
           </form>
         </div>
         <div className="mx-auto hidden max-w-3xl px-4 pb-2 md:block">

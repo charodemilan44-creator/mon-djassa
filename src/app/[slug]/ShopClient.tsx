@@ -316,7 +316,7 @@ function Checkout({
     setError("");
 
     const msg = [
-      `Bonjour ${shop.name} 👋`,
+      `Bonjour ${shop.name},`,
       "Je voudrais commander :",
       "",
       ...lines.map((l) => `• ${l.qty} x ${l.product.name} : ${formatFCFA(l.qty * l.product.price)}`),

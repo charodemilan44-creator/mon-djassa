@@ -36,7 +36,7 @@ export function ShopForm({ shop, userId }: { shop: Shop; userId: string }) {
             {COLORS.map((c) => (
               <label key={c} className="cursor-pointer">
                 <input type="radio" name="color" value={c} defaultChecked={shop.color.toUpperCase() === c} className="peer sr-only" />
-                <span className="block size-10 rounded-full ring-offset-2 peer-checked:ring-2 peer-checked:ring-stone-900" style={{ background: c }} />
+                <span className="block size-10 rounded-full ring-offset-2 peer-checked:ring-2 peer-checked:ring-ink" style={{ background: c }} />
               </label>
             ))}
           </div>
@@ -51,11 +51,11 @@ export function ShopForm({ shop, userId }: { shop: Shop; userId: string }) {
         </div>
         <div>
           <label className="label" htmlFor="slug">Lien de la boutique</label>
-          <div className="flex items-center rounded-xl border border-stone-300 bg-white">
-            <span className="pl-4 text-stone-500">mondjassa.ci/</span>
+          <div className="flex items-center rounded-xl border border-line bg-white">
+            <span className="pl-4 text-mute">mondjassa.ci/</span>
             <input id="slug" name="slug" required className="w-full rounded-r-xl bg-transparent py-3 pr-4 outline-none" defaultValue={shop.slug} />
           </div>
-          <p className="mt-1 text-xs text-stone-500">Attention : si tu changes ton lien, l&apos;ancien ne marchera plus.</p>
+          <p className="mt-1 text-xs text-mute">Attention : si tu changes ton lien, l&apos;ancien ne marchera plus.</p>
         </div>
         <div>
           <label className="label" htmlFor="hours">Horaires (facultatif)</label>

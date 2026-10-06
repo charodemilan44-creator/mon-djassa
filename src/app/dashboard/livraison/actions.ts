@@ -15,7 +15,7 @@ export async function addZone(_prev: FormState, formData: FormData): Promise<For
   if (error) return { error: "Impossible d'enregistrer cette commune." };
   revalidatePath("/dashboard/livraison");
   revalidatePath(`/${shop.slug}`);
-  return { ok: `${commune} enregistrée ✓` };
+  return { ok: `${commune} enregistrée` };
 }
 
 export async function deleteZone(formData: FormData) {

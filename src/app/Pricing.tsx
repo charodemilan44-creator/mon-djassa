@@ -26,7 +26,7 @@ export function Pricing({ monthly, yearly }: { monthly: number; yearly: number }
   const saving = Math.round((1 - yearly / (monthly * 12)) * 100);
 
   return (
-    <div className="mt-12">
+    <div className="mt-8 sm:mt-12">
       <div className="mx-auto flex w-fit items-center gap-1 rounded-full border border-line bg-white p-1 text-sm font-semibold">
         <button type="button" onClick={() => setAnnual(false)} className={`rounded-full px-5 py-2 transition ${annual ? "text-mute hover:text-ink" : "bg-ink text-white"}`}>
           Mensuel
@@ -37,38 +37,38 @@ export function Pricing({ monthly, yearly }: { monthly: number; yearly: number }
         </button>
       </div>
 
-      <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:grid-cols-2">
-        <div className="card p-8">
+      <div className="mx-auto mt-6 grid max-w-4xl gap-4 sm:mt-10 sm:gap-5 md:grid-cols-2">
+        <div className="card p-6 sm:p-8">
           <p className="text-sm font-semibold text-mute">Essai</p>
-          <p className="mt-3 font-display text-5xl font-bold tight">0 F</p>
+          <p className="mt-3 font-display text-4xl font-bold tight sm:text-5xl">0 F</p>
           <p className="mt-1 text-sm text-mute">pendant 1 mois, sans carte ni paiement</p>
-          <ul className="mt-8 space-y-3 text-sm">
+          <ul className="mt-6 space-y-2.5 text-sm sm:mt-8 sm:space-y-3">
             {FEATURES.map((f) => (
               <li key={f} className="flex gap-3"><Check />{f}</li>
             ))}
           </ul>
-          <Link href="/inscription" className="btn-ghost mt-8 w-full">Commencer l&apos;essai</Link>
+          <Link href="/inscription" className="btn-ghost mt-6 w-full sm:mt-8">Commencer l&apos;essai</Link>
         </div>
 
-        <div className="relative overflow-hidden rounded-3xl bg-ink p-8 text-white shadow-2xl shadow-ink/20">
+        <div className="relative overflow-hidden rounded-3xl bg-ink p-6 text-white sm:p-8 shadow-2xl shadow-ink/20">
           <div className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-brand/30 blur-3xl" />
           <div className="relative">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-white/70">Pro</p>
               <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">Le plus choisi</span>
             </div>
-            <p className="mt-3 font-display text-5xl font-bold tight">
+            <p className="mt-3 font-display text-4xl font-bold tight sm:text-5xl">
               {formatFCFA(annual ? yearly : monthly)}
             </p>
             <p className="mt-1 text-sm text-white/60">
               {annual ? `par an, soit ${formatFCFA(Math.round(yearly / 12))} par mois` : "par mois, sans engagement"}
             </p>
-            <ul className="mt-8 space-y-3 text-sm text-white/90">
+            <ul className="mt-6 space-y-2.5 text-sm sm:mt-8 sm:space-y-3 text-white/90">
               {FEATURES.map((f) => (
                 <li key={f} className="flex gap-3"><Check />{f}</li>
               ))}
             </ul>
-            <Link href="/inscription" className="btn-accent mt-8 w-full">Créer ma boutique</Link>
+            <Link href="/inscription" className="btn-accent mt-6 w-full sm:mt-8">Créer ma boutique</Link>
             <p className="mt-4 text-center text-xs text-white/50">Wave · Orange Money</p>
           </div>
         </div>

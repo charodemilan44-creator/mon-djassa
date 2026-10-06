@@ -15,13 +15,13 @@ export default async function SignupPage() {
   return (
     <main className="mx-auto max-w-md px-4 py-8">
       <Logo />
-      <h1 className="mt-8 text-2xl font-extrabold">Crée ta boutique</h1>
-      <p className="mt-1 text-stone-600">C&apos;est gratuit pendant 1 mois.</p>
+      <h1 className="mt-8 font-display text-2xl font-bold tight">Crée ta boutique</h1>
+      <p className="mt-1 text-mute">C&apos;est gratuit pendant 1 mois.</p>
       <div className="mt-6">
         <SignupForm withAccount={!user} />
       </div>
       {!user && (
-        <p className="mt-6 text-center text-sm text-stone-600">
+        <p className="mt-6 text-center text-sm text-mute">
           Tu as déjà une boutique ? <Link href="/connexion" className="font-semibold text-brand">Connecte-toi</Link>
         </p>
       )}

@@ -26,8 +26,8 @@ export default async function DashboardHome({ searchParams }: { searchParams: Pr
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-extrabold">{bienvenue ? `Bienvenue, ${shop.name} 🎉` : shop.name}</h1>
-        <p className="text-stone-600">
+        <h1 className="font-display text-2xl font-bold tight">{bienvenue ? `Bienvenue, ${shop.name}` : shop.name}</h1>
+        <p className="text-mute">
           {access.status === "trial" && <>Essai gratuit : encore <b>{access.daysLeft} jour{access.daysLeft > 1 ? "s" : ""}</b> (jusqu&apos;au {formatDate(access.until)}).</>}
           {access.status === "active" && <>Abonnement actif jusqu&apos;au {formatDate(access.until)}.</>}
           {access.status === "expired" && <>Ta boutique est en pause.</>}
@@ -51,9 +51,9 @@ export default async function DashboardHome({ searchParams }: { searchParams: Pr
           <ul className="space-y-2">
             {todo.map((t) => (
               <li key={t.label}>
-                <Link href={t.href} className="flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-stone-50">
-                  <span className={`grid size-6 place-items-center rounded-full text-xs text-white ${t.done ? "bg-leaf" : "bg-stone-300"}`}>✓</span>
-                  <span className={t.done ? "text-stone-400 line-through" : "font-medium"}>{t.label}</span>
+                <Link href={t.href} className="flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-paper">
+                  <span className={`grid size-6 place-items-center rounded-full text-white ${t.done ? "bg-leaf" : "bg-line"}`}><svg viewBox="0 0 20 20" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m5 10.5 3 3 7-7" /></svg></span>
+                  <span className={t.done ? "text-mute line-through" : "font-medium"}>{t.label}</span>
                 </Link>
               </li>
             ))}
@@ -67,8 +67,8 @@ export default async function DashboardHome({ searchParams }: { searchParams: Pr
 function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="card p-3 text-center">
-      <p className="text-2xl font-extrabold text-brand">{value}</p>
-      <p className="text-xs text-stone-500">{label}</p>
+      <p className="font-display text-2xl font-bold tight text-brand">{value}</p>
+      <p className="text-xs text-mute">{label}</p>
     </div>
   );
 }

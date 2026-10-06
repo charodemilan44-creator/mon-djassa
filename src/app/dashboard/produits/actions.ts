@@ -68,3 +68,30 @@ export async function deleteCategory(formData: FormData) {
   revalidatePath("/dashboard/produits");
   revalidatePath(`/${shop.slug}`);
 }
+
+/** Ajout rapide : plusieurs produits d'un coup, chacun avec sa photo, son nom et son prix. */
+export async function saveProductsBulk(
+  items: { name: string; price: number; image_url: string }[],
+  categoryId: string,
+): Promise<{ error?: string; count?: number }> {
+  const { supabase, shop } = await requireShop();
+  const rows = items
+    .map((it) => ({ name: String(it.name ?? "").trim().slice(0, 80), price: Number(it.price), image_url: String(it.image_url ?? "") || null }))
+    .filter((it) => it.name);
+  if (!rows.length) return { error: "Donne au moins un nom et un prix." };
+  if (rows.length > 30) return { error: "30 produits maximum à la fois." };
+  if (rows.some((r) => !Number.isInteger(r.price) || r.price < 0)) return { error: "Chaque prix doit être un nombre en FCFA, par exemple 15000." };
+
+  let category_id: string | null = null;
+  if (categoryId) {
+    const { data } = await supabase.from("categories").select("id").eq("id", categoryId).eq("shop_id", shop.id).maybeSingle();
+    category_id = data?.id ?? null;
+  }
+
+  const { error } = await supabase.from("products").insert(rows.map((r) => ({ ...r, category_id, in_stock: true, shop_id: shop.id })));
+  if (error) return { error: "Les produits n'ont pas pu être enregistrés. Réessaie." };
+
+  revalidatePath("/dashboard/produits");
+  revalidatePath(`/${shop.slug}`);
+  return { count: rows.length };
+}

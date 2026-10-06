@@ -1,21 +1,26 @@
 import Link from "next/link";
 
-export function LogoMark({ className = "size-8" }: { className?: string }) {
+/** Logo MonDjassa : un sac de boutique en forme de bulle de discussion (la commande arrive en message) */
+export function LogoMark({ className = "size-9" }: { className?: string }) {
   return (
-    <span className={`grid place-items-center rounded-[10px] bg-ink text-white ${className}`} aria-hidden>
-      <svg viewBox="0 0 24 24" className="size-[58%]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 9.5 5.6 4h12.8L20 9.5M4 9.5h16M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M5.5 12.5V20h13v-7.5" />
-        <circle cx="12" cy="16.2" r="1.3" fill="#e8690b" stroke="none" />
-      </svg>
-    </span>
+    <svg viewBox="0 0 48 48" className={`shrink-0 ${className}`} aria-hidden>
+      <rect width="48" height="48" rx="13" fill="#e8690b" />
+      <g transform="translate(0 -1.5)">
+        <path d="M18.5 17.5v-1.8a5.5 5.5 0 0 1 11 0v1.8" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+        <path d="M14.6 17.5h18.8a2 2 0 0 1 2 2.1l-.9 13.6a3.2 3.2 0 0 1-3.2 3H20.2l-5.4 4.3v-4.6a3.2 3.2 0 0 1-1.8-2.7l-.4-13.6a2 2 0 0 1 2-2.1z" fill="#fff" />
+        <circle cx="19.2" cy="27" r="1.7" fill="#e8690b" />
+        <circle cx="24" cy="27" r="1.7" fill="#e8690b" />
+        <circle cx="28.8" cy="27" r="1.7" fill="#e8690b" />
+      </g>
+    </svg>
   );
 }
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link href="/" className={`inline-flex items-center gap-2.5 ${className}`}>
-      <LogoMark />
-      <span className="font-display text-[1.35rem] font-bold tracking-tight">
+    <Link href="/" className={`inline-flex items-center gap-2 ${className}`} aria-label="MonDjassa, accueil">
+      <LogoMark className="size-8" />
+      <span className="font-display text-[1.25rem] font-bold tracking-tight">
         mon<span className="text-brand">djassa</span>
       </span>
     </Link>

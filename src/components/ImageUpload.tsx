@@ -1,20 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-
-/** Réduit la photo (moins de données mobiles) puis l'envoie dans Supabase Storage. */
-async function resize(file: File, maxSize: number): Promise<Blob> {
-  const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.round(bitmap.width * scale);
-  canvas.height = Math.round(bitmap.height * scale);
-  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  return new Promise((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("conversion"))), "image/jpeg", 0.82),
-  );
-}
+import { uploadImage } from "@/lib/upload";
 
 export function ImageUpload({
   name,
@@ -42,12 +29,7 @@ export function ImageUpload({
     setBusy(true);
     setError("");
     try {
-      const blob = await resize(file, maxSize);
-      const path = `${userId}/${crypto.randomUUID()}.jpg`;
-      const supabase = createClient();
-      const { error } = await supabase.storage.from("shop-images").upload(path, blob, { contentType: "image/jpeg" });
-      if (error) throw error;
-      setUrl(supabase.storage.from("shop-images").getPublicUrl(path).data.publicUrl);
+      setUrl(await uploadImage(file, userId, maxSize));
     } catch {
       setError("La photo n'a pas pu être envoyée. Vérifie ta connexion et réessaie.");
     } finally {
@@ -66,13 +48,13 @@ export function ImageUpload({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className={`${box} relative grid place-items-center overflow-hidden border-2 border-dashed border-stone-300 bg-stone-50 text-sm text-stone-500`}
+        className={`${box} relative grid place-items-center overflow-hidden border-2 border-dashed border-line bg-white text-sm text-mute`}
       >
         {url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={url} alt="" className="absolute inset-0 size-full object-cover" />
         ) : (
-          <span className="px-2">📷 Ajouter</span>
+          <span className="flex flex-col items-center gap-1 px-2"><svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M4 8h3l1.5-2h7L17 8h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>Ajouter une photo</span>
         )}
         {busy && <span className="absolute inset-0 grid place-items-center bg-white/80 font-semibold">Envoi…</span>}
       </button>
@@ -81,7 +63,7 @@ export function ImageUpload({
         {url && (
           <>
             <button type="button" className="font-semibold text-brand" onClick={() => inputRef.current?.click()}>Changer</button>
-            <button type="button" className="text-stone-500" onClick={() => setUrl("")}>Retirer</button>
+            <button type="button" className="text-mute" onClick={() => setUrl("")}>Retirer</button>
           </>
         )}
       </div>

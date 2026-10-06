@@ -40,5 +40,5 @@ export async function saveShop(_prev: FormState, formData: FormData): Promise<Fo
   revalidatePath(`/${shop.slug}`);
   revalidatePath(`/${slug}`);
   revalidatePath("/dashboard", "layout");
-  return { ok: slug !== shop.slug ? `Enregistré ✓ Ton nouveau lien : mondjassa.ci/${slug}` : "Enregistré ✓" };
+  return { ok: slug !== shop.slug ? `Enregistré. Ton nouveau lien : mondjassa.ci/${slug}` : "Enregistré" };
 }
