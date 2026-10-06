@@ -44,7 +44,10 @@ export default async function AdminPage() {
         </div>
       </header>
       <main className="mx-auto max-w-3xl space-y-5 px-4 py-6">
-        <h1 className="font-display text-2xl font-bold tight">Paiements à vérifier</h1>
+        <div>
+          <h1 className="font-display text-2xl font-bold tight">Paiements à vérifier</h1>
+          <p className="mt-1 text-sm text-mute">Ces abonnements sont déjà actifs. Vérifie chaque paiement dans ton appli Wave.</p>
+        </div>
 
         <div className="grid grid-cols-3 gap-2">
           <Stat label="En attente" value={String(pending.length)} />
@@ -75,15 +78,15 @@ export default async function AdminPage() {
                   <span className="font-mono font-semibold break-all">{r.reference}</span>
                   <span className="block text-xs text-mute">Déclaré le {formatDate(r.created_at)}</span>
                 </div>
-                <p className="text-xs text-mute">Vérifie dans ton appli Wave que ce paiement est bien arrivé avant de valider.</p>
+                <p className="text-xs text-mute">Trouvé dans Wave : touche Confirmer. Introuvable : touche Refuser, la période offerte est retirée.</p>
                 <div className="grid grid-cols-2 gap-2">
                   <form action={rejectRequest}>
                     <input type="hidden" name="id" value={r.id} />
-                    <button className="btn-ghost w-full text-sm">Refuser</button>
+                    <button className="btn-ghost w-full text-sm text-red-700">Refuser</button>
                   </form>
                   <form action={approveRequest}>
                     <input type="hidden" name="id" value={r.id} />
-                    <button className="btn-primary w-full text-sm">Valider</button>
+                    <button className="btn-primary w-full text-sm">Confirmer</button>
                   </form>
                 </div>
               </li>
@@ -104,7 +107,7 @@ export default async function AdminPage() {
                       {access?.status === "active" && <span className="text-mute"> · actif jusqu&apos;au {formatDate(access.until)}</span>}
                     </span>
                     <span className={`shrink-0 text-xs font-semibold ${r.status === "approved" ? "text-leaf" : "text-red-700"}`}>
-                      {r.status === "approved" ? "Validé" : "Refusé"}
+                      {r.status === "approved" ? "Confirmé" : "Refusé"}
                     </span>
                   </li>
                 );

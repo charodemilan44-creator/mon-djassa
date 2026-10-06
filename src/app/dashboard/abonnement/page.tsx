@@ -56,14 +56,14 @@ export default async function SubscriptionPage() {
       <section className="card space-y-4">
         <div>
           <h2 className="font-display text-lg font-bold tight">2. Confirme ton paiement</h2>
-          <p className="text-sm text-mute">Ta boutique est activée dès que le paiement est vérifié.</p>
+          <p className="text-sm text-mute">Ton abonnement est activé tout de suite.</p>
         </div>
         {pending.length > 0 && (
           <ul className="space-y-2">
             {pending.map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-3 rounded-xl bg-amber-50 px-3 py-2.5 text-sm text-amber-900">
+              <li key={r.id} className="flex items-center justify-between gap-3 rounded-xl bg-leaf/10 px-3 py-2.5 text-sm text-leaf">
                 <span>{r.plan === "yearly" ? "Annuel" : "Mensuel"} · {formatFCFA(r.amount)} · {r.reference}</span>
-                <span className="shrink-0 font-semibold">En vérification</span>
+                <span className="shrink-0 font-semibold">Activé</span>
               </li>
             ))}
           </ul>
