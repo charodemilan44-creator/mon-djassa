@@ -4,6 +4,8 @@ export const PRICE_MONTHLY = 5000;
 export const PRICE_YEARLY = 25000;
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
+/** Adresse affichée aux vendeuses, sans https:// (ex : mondjassa.netlify.app) */
+export const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
 export const SUPPORT_WHATSAPP = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || "";
 
 export const ABIDJAN_COMMUNES = [

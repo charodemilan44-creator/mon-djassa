@@ -1,6 +1,6 @@
 import { requireShop } from "@/lib/shop";
 import type { Payment } from "@/lib/types";
-import { PRICE_MONTHLY, PRICE_YEARLY, SUPPORT_WHATSAPP, formatDate, formatFCFA, waLink } from "@/lib/utils";
+import { PRICE_MONTHLY, PRICE_YEARLY, SUPPORT_WHATSAPP, formatDate, formatFCFA, waLink, SITE_HOST } from "@/lib/utils";
 
 const METHOD = { wave: "Wave", orange_money: "Orange Money", autre: "Autre" } as const;
 
@@ -20,7 +20,7 @@ export default async function SubscriptionPage() {
     SUPPORT_WHATSAPP
       ? waLink(
           SUPPORT_WHATSAPP,
-          `Bonjour MonDjassa, je veux payer l'abonnement ${plan} (${formatFCFA(amount)}) par ${method} pour ma boutique « ${shop.name} » (mondjassa.ci/${shop.slug}).`,
+          `Bonjour MonDjassa, je veux payer l'abonnement ${plan} (${formatFCFA(amount)}) par ${method} pour ma boutique « ${shop.name} » (${SITE_HOST}/${shop.slug}).`,
         )
       : "#";
 
