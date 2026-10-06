@@ -5,7 +5,7 @@ import { FormMessage } from "@/components/FormMessage";
 import { ImageUpload } from "@/components/ImageUpload";
 import { SubmitButton } from "@/components/SubmitButton";
 import type { Shop } from "@/lib/types";
-import { displayPhone } from "@/lib/utils";
+import { displayPhone, SITE_HOST } from "@/lib/utils";
 import { saveShop } from "./actions";
 
 const COLORS = ["#F77F00", "#009E60", "#B45309", "#BE185D", "#7C3AED", "#2563EB", "#0F766E", "#1C1917"];
@@ -52,7 +52,7 @@ export function ShopForm({ shop, userId }: { shop: Shop; userId: string }) {
         <div>
           <label className="label" htmlFor="slug">Lien de la boutique</label>
           <div className="flex items-center rounded-xl border border-stone-300 bg-white">
-            <span className="pl-4 text-stone-500">mondjassa.ci/</span>
+            <span className="pl-4 text-stone-500">{SITE_HOST}/</span>
             <input id="slug" name="slug" required className="w-full rounded-r-xl bg-transparent py-3 pr-4 outline-none" defaultValue={shop.slug} />
           </div>
           <p className="mt-1 text-xs text-stone-500">Attention : si tu changes ton lien, l&apos;ancien ne marchera plus.</p>

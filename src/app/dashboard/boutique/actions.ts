@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import type { FormState } from "@/components/FormMessage";
 import { requireShop } from "@/lib/shop";
-import { RESERVED_SLUGS, normalizePhone, slugify } from "@/lib/utils";
+import { RESERVED_SLUGS, normalizePhone, slugify, SITE_HOST } from "@/lib/utils";
 
 export async function saveShop(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, shop } = await requireShop();
@@ -34,11 +34,11 @@ export async function saveShop(_prev: FormState, formData: FormData): Promise<Fo
     })
     .eq("id", shop.id);
 
-  if (error?.code === "23505") return { error: `Le lien mondjassa.ci/${slug} est déjà pris.` };
+  if (error?.code === "23505") return { error: `Le lien ${SITE_HOST}/${slug} est déjà pris.` };
   if (error) return { error: "Les changements n'ont pas pu être enregistrés." };
 
   revalidatePath(`/${shop.slug}`);
   revalidatePath(`/${slug}`);
   revalidatePath("/dashboard", "layout");
-  return { ok: slug !== shop.slug ? `Enregistré ✓ Ton nouveau lien : mondjassa.ci/${slug}` : "Enregistré ✓" };
+  return { ok: slug !== shop.slug ? `Enregistré ✓ Ton nouveau lien : ${SITE_HOST}/${slug}` : "Enregistré ✓" };
 }

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { PRICE_MONTHLY, PRICE_YEARLY, SUPPORT_WHATSAPP, formatFCFA, waLink } from "@/lib/utils";
+import { PRICE_MONTHLY, PRICE_YEARLY, SUPPORT_WHATSAPP, formatFCFA, waLink, SITE_HOST } from "@/lib/utils";
 
 const steps = [
   { n: "1", title: "J'ajoute mes produits", text: "Une photo, un nom, un prix. Directement depuis ton téléphone." },
-  { n: "2", title: "Je partage mon lien", text: "Sur ton statut, dans tes groupes, sur TikTok : mondjassa.ci/ta-boutique." },
+  { n: "2", title: "Je partage mon lien", text: `Sur ton statut, dans tes groupes, sur TikTok : ${SITE_HOST}/ta-boutique.` },
   { n: "3", title: "Je reçois les commandes sur WhatsApp", text: "La cliente choisit, le message arrive tout prêt avec les produits et le total." },
 ];
 
@@ -213,7 +213,7 @@ function PhoneMockup() {
   return (
     <div className="mx-auto w-64 rounded-[2.5rem] border-8 border-stone-900 bg-white shadow-2xl" aria-hidden>
       <div className="rounded-t-[1.8rem] bg-brand px-4 pt-6 pb-4 text-white">
-        <p className="text-xs opacity-80">mondjassa.ci/awa-couture</p>
+        <p className="text-xs opacity-80">{SITE_HOST}/awa-couture</p>
         <p className="text-lg font-bold">Awa Couture</p>
       </div>
       <div className="grid grid-cols-2 gap-2 p-3">
