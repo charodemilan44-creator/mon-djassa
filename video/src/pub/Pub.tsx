@@ -1,6 +1,7 @@
-import { AbsoluteFill, Easing, interpolate, random, Sequence, useCurrentFrame, useVideoConfig, spring } from "remotion";
+import { AbsoluteFill, Audio, Easing, interpolate, random, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { DISPLAY, fcfa, Grain, Icon, ICONS, K, LogoMark, Phone, Photo, Reveal, SANS, tween, useSpring, WaIcon, Wordmark } from "./kit";
 import { ShopScreen } from "./Shop";
+import { VOIX, VOIX_FICHIER, VOIX_FICHIER_2 } from "./voix";
 
 /*
  * Pub MonDjassa, 60 s, 1080×1920, 30 i/s.
@@ -13,15 +14,15 @@ import { ShopScreen } from "./Shop";
 const S = {
   accroche: 105,
   statut: 210,
-  combien: 210,
+  combien: 216,
   perdue: 135,
-  bascule: 165,
+  bascule: 185,
   produits: 195,
   lien: 165,
   commande: 240,
   atouts: 105,
-  prix: 120,
-  fin: 150,
+  prix: 150,
+  fin: 165,
 };
 export const PUB_DURATION = Object.values(S).reduce((a, b) => a + b, 0);
 
@@ -50,9 +51,34 @@ export const Pub = () => {
       {seq(S.prix, <Prix />)}
       {seq(S.fin, <Fin />)}
       <Grain />
+      <Voix />
     </AbsoluteFill>
   );
 };
+
+/** Voix off : chaque phrase est posée au bon moment de sa scène */
+function Voix() {
+  const starts: Record<string, number> = {};
+  let t = 0;
+  for (const [k, d] of Object.entries(S)) {
+    starts[k] = t;
+    t += d;
+  }
+  return (
+    <>
+      {VOIX.map((v, i) => {
+        const from = Math.round(starts[v.scene] + v.at * 30);
+        const startFrom = Math.max(0, Math.round((v.from - 0.04) * 30));
+        const endAt = Math.round((v.to + 0.1) * 30);
+        return (
+          <Sequence key={i} from={from} durationInFrames={endAt - startFrom} layout="none">
+            <Audio src={staticFile(v.part2 ? VOIX_FICHIER_2 : VOIX_FICHIER)} startFrom={startFrom} endAt={endAt} />
+          </Sequence>
+        );
+      })}
+    </>
+  );
+}
 
 /* ================= LA DOULEUR ================= */
 
@@ -166,7 +192,7 @@ const QUESTIONS = [
 function Combien() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const msgFrame = 72;
+  const msgFrame = 124;
   const intensity = tween(frame, [0, 150], [0, 1], Easing.in(Easing.quad));
   const shakeX = (random(`x${frame}`) - 0.5) * 14 * intensity;
   const shakeY = (random(`y${frame}`) - 0.5) * 14 * intensity;
@@ -216,9 +242,9 @@ function Combien() {
         </div>
         {textIn && (
           <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", padding: 60 }}>
-            <Reveal text={"Et tu réponds\nla même chose"} size={112} color="#fff" />
+            <Reveal text={"Et tu réponds\nla même chose"} size={112} color="#fff" delay={msgFrame} />
             <div style={{ height: 30 }} />
-            <Reveal text={"50 fois par jour."} size={130} color={K.brand} delay={14} />
+            <Reveal text={"50 fois par jour."} size={130} color={K.brand} delay={msgFrame + 46} />
           </AbsoluteFill>
         )}
       </AbsoluteFill>
@@ -231,7 +257,7 @@ function Perdue() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const scroll = tween(frame, [10, 60], [0, 1400], Easing.in(Easing.cubic));
-  const stamp = spring({ frame: frame - 48, fps, config: { damping: 9, mass: 0.6 } });
+  const stamp = spring({ frame: frame - 70, fps, config: { damping: 9, mass: 0.6 } });
   const collapse = tween(frame, [112, S.perdue], [1, 0], Easing.in(Easing.cubic));
   const msgs = [
     { t: "Bonsoir, la robe noire est dispo ?", me: false },
@@ -261,7 +287,7 @@ function Perdue() {
         <div style={{ position: "absolute", top: 250, left: 0, right: 0, padding: "0 60px" }}>
           <Reveal text={"Une cliente oubliée,"} size={96} color="#fff" delay={2} />
           <div style={{ height: 14 }} />
-          <Reveal text={"c'est une vente perdue."} size={96} color="rgba(255,255,255,.55)" delay={14} />
+          <Reveal text={"c'est une vente perdue."} size={96} color="rgba(255,255,255,.55)" delay={60} />
         </div>
         <div style={{ position: "absolute", top: 900, left: 0, right: 0, display: "grid", placeItems: "center" }}>
           <div
@@ -298,29 +324,29 @@ function Perdue() {
 function Bascule() {
   const frame = useCurrentFrame();
   const grow = tween(frame, [0, 22], [1, 70], Easing.bezier(0.7, 0, 0.2, 1));
-  const toPaper = tween(frame, [78, 100], [0, 1], Easing.bezier(0.7, 0, 0.2, 1));
-  const logo = useSpring(96, 12, 0.8);
-  const draw = tween(frame, [96, 126], [0, 1]);
+  const toPaper = tween(frame, [98, 120], [0, 1], Easing.bezier(0.7, 0, 0.2, 1));
+  const logo = useSpring(116, 12, 0.8);
+  const draw = tween(frame, [116, 146], [0, 1]);
   return (
     <AbsoluteFill style={{ background: K.ink }}>
       <div style={{ position: "absolute", left: "50%", top: "50%", width: 40, height: 40, margin: -20, borderRadius: 99, background: K.brand, transform: `scale(${grow})` }} />
-      {frame < 92 && (
+      {frame < 122 && (
         <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", padding: 70 }}>
-          <Reveal text={"Et si toute\nta boutique"} size={124} color="#fff" delay={16} out={80} />
+          <Reveal text={"Et si toute\nta boutique"} size={124} color="#fff" delay={16} out={102} />
           <div style={{ height: 24 }} />
-          <Reveal text={"tenait dans\nun seul lien ?"} size={124} color={K.ink} delay={30} out={80} />
+          <Reveal text={"tenait dans\nun seul lien ?"} size={124} color={K.ink} delay={44} out={102} />
         </AbsoluteFill>
       )}
       {/* Volet papier */}
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: `${toPaper * 100}%`, background: K.paper, borderRadius: `${(1 - toPaper) * 300}px ${(1 - toPaper) * 300}px 0 0` }} />
-      {frame >= 92 && (
+      {frame >= 112 && (
         <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", gap: 46 }}>
           <div style={{ transform: `scale(${logo}) rotate(${(1 - logo) * -25}deg)`, filter: `drop-shadow(0 30px 50px rgba(232,105,11,.35))` }}>
             <LogoMark size={260} draw={draw} />
           </div>
-          <Wordmark size={150} delay={104} />
+          <Wordmark size={150} delay={124} />
           <div style={{ marginTop: 10 }}>
-            <Reveal text={"Ta boutique en ligne.\nTes commandes sur WhatsApp."} size={50} font={SANS} weight={700} color={K.mute} delay={124} stagger={2} lineHeight={1.3} />
+            <Reveal text={"Ta boutique en ligne.\nTes commandes sur WhatsApp."} size={50} font={SANS} weight={700} color={K.mute} delay={144} stagger={2} lineHeight={1.3} />
           </div>
         </AbsoluteFill>
       )}
@@ -598,8 +624,8 @@ function Prix() {
 function Fin() {
   const frame = useCurrentFrame();
   const logo = useSpring(0, 12);
-  const btn = useSpring(40, 10);
-  const pulse = 1 + Math.max(0, Math.sin((frame - 60) / 6)) * 0.04 * (frame > 60 ? 1 : 0);
+  const btn = useSpring(100, 10);
+  const pulse = 1 + Math.max(0, Math.sin((frame - 120) / 6)) * 0.04 * (frame > 120 ? 1 : 0);
   return (
     <AbsoluteFill style={{ background: K.ink, justifyContent: "center", alignItems: "center" }}>
       <div style={{ position: "absolute", width: 1400, height: 1400, borderRadius: 999, background: `radial-gradient(circle, rgba(232,105,11,.35), transparent 60%)`, transform: `scale(${0.6 + logo * 0.5})` }} />
@@ -611,12 +637,12 @@ function Fin() {
         <Reveal text={"Crée ta boutique\nen 5 minutes."} size={118} color="#fff" delay={14} />
       </div>
       <div style={{ marginTop: 34 }}>
-        <Reveal text="Depuis ton téléphone." size={46} font={SANS} weight={600} color="rgba(255,255,255,.6)" delay={30} />
+        <Reveal text="Depuis ton téléphone." size={46} font={SANS} weight={600} color="rgba(255,255,255,.6)" delay={76} />
       </div>
       <div style={{ marginTop: 80, transform: `scale(${btn * pulse})`, background: K.brand, color: "#fff", fontFamily: SANS, fontWeight: 800, fontSize: 50, padding: "36px 70px", borderRadius: 99, boxShadow: "0 30px 70px rgba(232,105,11,.45)" }}>
         Commencer gratuitement
       </div>
-      <div style={{ marginTop: 50, display: "flex", alignItems: "center", gap: 14, fontFamily: SANS, fontWeight: 700, fontSize: 42, color: "#fff", opacity: tween(frame, [56, 70], [0, 1]) }}>
+      <div style={{ marginTop: 50, display: "flex", alignItems: "center", gap: 14, fontFamily: SANS, fontWeight: 700, fontSize: 42, color: "#fff", opacity: tween(frame, [112, 126], [0, 1]) }}>
         <Icon d={ICONS.link} size={40} color={K.brand} stroke={2.6} />
         mondjassa.netlify.app
       </div>
